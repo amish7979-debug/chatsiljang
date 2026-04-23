@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       : "당신은 학원 AI 상담 매니저입니다.";
 
     const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 500,
       system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
