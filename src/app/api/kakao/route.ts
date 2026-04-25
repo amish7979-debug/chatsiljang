@@ -34,7 +34,9 @@ export async function POST(req: NextRequest) {
 - 수강료: ${JSON.stringify(academy.price_info || {})}
 - FAQ: ${JSON.stringify(academy.faq || {})}
 학부모의 질문에 친절하고 정확하게 답변해주세요. 모르는 정보는 학원에 직접 문의를 안내하세요.
-답변은 카카오톡 메시지에 적합하게 간결하게 작성해주세요.`
+답변은 카카오톡 메시지에 적합하게 간결하게 작성해주세요.
+마크다운 문법(#, ##, **, -, --- 등)은 절대 사용하지 마세요.
+이모지는 자연스럽게 사용해도 됩니다.
       : "당신은 학원 AI 상담 매니저입니다.";
 
     const response = await anthropic.messages.create({
