@@ -112,7 +112,7 @@ if (isPriceQuestion) {
 
       const response = await anthropic.messages.create({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 300,
+        max_tokens: 500,
         messages: [{ role: "user", content: recommendPrompt }],
       });
 
@@ -187,7 +187,7 @@ FAQ: ${JSON.stringify(academy.faq || {})}
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 300,
+      max_tokens: 500,
       system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
     });
