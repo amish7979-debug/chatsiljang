@@ -68,10 +68,10 @@ export async function POST(req: NextRequest) {
     // 맞춤수업 추천 처리
     if (hasRecommendationInfo) {
       const { data: academy } = await supabase
-        .from("academies")
-        .select("*")
-        .eq("id", academyId)
-        .single();
+  .from("academies")
+  .select("name, address, phone, schedule, price_info, faq")
+  .eq("id", academyId)
+  .single();
 
       const recommendPrompt = `당신은 "${academy?.name || "학원"}" 학원의 AI 상담 매니저입니다.
 학원 수업 정보: ${JSON.stringify(academy?.price_info || {})}
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
 
       const response = await anthropic.messages.create({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 500,
+        max_tokens: 300,
         messages: [{ role: "user", content: recommendPrompt }],
       });
 
@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 500,
+      max_tokens: 300,
       system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
     });
