@@ -176,13 +176,14 @@ if (isPriceQuestion) {
       .single();
 
       const systemPrompt = academy
-      ? `"${academy.name}" 학원 AI 상담사입니다.
-    주소: ${academy.address || "미등록"}
-    전화: ${academy.phone || "미등록"}
-    수강료: ${JSON.stringify(academy.price_info || {})}
-    FAQ: ${JSON.stringify(academy.faq || {})}
-    친절하고 간결하게 답변. 마크다운 금지. 이모지 사용.`
-      : "학원 AI 상담사입니다.";
+  ? `"${academy.name}" 학원 AI 상담사입니다.
+주소: ${academy.address || "미등록"}
+전화: ${academy.phone || "미등록"}
+수강료: ${JSON.stringify(academy.price_info || {})}
+FAQ: ${JSON.stringify(academy.faq || {})}
+친절하고 간결하게 답변. 마크다운 금지. 이모지 사용.
+반드시 학원 관련 질문에만 답변하세요. 날씨, 맛집, 주식 등 학원과 무관한 질문은 "저는 ${academy.name} 전용 상담 챗봇이라 학원 관련 질문만 답변드릴 수 있어요 😊"라고 안내하세요.`
+  : "학원 AI 상담사입니다.";
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
