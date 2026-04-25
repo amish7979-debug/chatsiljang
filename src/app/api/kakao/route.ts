@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
 
     // 추천 정보가 포함된 메시지인지 확인
     const hasRecommendationInfo =
-      userMessage.includes("학년") && userMessage.includes("과목");
+  userMessage.includes("학년") || 
+  (userMessage.includes("과목") && userMessage.includes("목표"));
 
     // 맞춤수업 추천 처리
     if (hasRecommendationInfo) {
