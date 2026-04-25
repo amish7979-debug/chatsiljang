@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const userMessage = body.userRequest?.utterance || "";
     const channelId = body.bot?.id || "";
+    console.log("카카오 요청 body:", JSON.stringify(body));
     const academyMap: Record<string, string> = {
       "10feabe1-5f62-4e92-b485-6146a7539c5d": "10feabe1-5f62-4e92-b485-6146a7539c5d",
   "69ec58d44609e56adc740ef9": "30333e1b-8ebd-4e19-b17a-f33c7fb22d43",
