@@ -44,6 +44,37 @@ export async function POST(req: NextRequest) {
     };
     const academyId = academyMap[channelId] || "30333e1b-8ebd-4e19-b17a-f33c7fb22d43";
 
+    const isPriceQuestion = 
+  userMessage.includes("수강료") ||
+  userMessage.includes("가격") ||
+  userMessage.includes("비용") ||
+  userMessage.includes("얼마");
+
+if (isPriceQuestion) {
+  const { data: academy } = await supabase
+    .from("academies")
+    .select("name, price_info")
+    .eq("id", academyId)
+    .single();
+  
+  const priceInfo = academy?.price_info;
+  let priceText = "수강료 정보를 불러오는 중 오류가 발생했습니다.";
+  
+  if (priceInfo && Array.isArray(priceInfo)) {
+    priceText = `📚 ${academy?.name} 수강료 안내\n\n`;
+    priceInfo.forEach((item: any) => {
+      priceText += `• ${item.class}: ${item.price}\n`;
+    });
+    priceText += "\n문의: 061-686-8879";
+  }
+  
+  return NextResponse.json({
+    version: "2.0",
+    template: {
+      outputs: [{ simpleText: { text: priceText } }],
+    },
+  });
+}
     // 예약 정보가 포함된 메시지인지 확인
     const hasReservationInfo =
   (userMessage.includes("이름") && userMessage.includes("연락처"));
