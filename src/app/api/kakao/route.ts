@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     // 예약 정보가 포함된 메시지인지 확인
     const hasReservationInfo =
-      userMessage.includes("이름:") && userMessage.includes("연락처:");
+  (userMessage.includes("이름") && userMessage.includes("연락처"));
 
     // 예약 의도 감지
     const isReservation =
