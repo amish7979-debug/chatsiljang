@@ -14,9 +14,7 @@ const supabase = createClient(
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
     const userMessage = body.userRequest?.utterance || "";
-    
     const academyId = "10feabe1-5f62-4e92-b485-6146a7539c5d";
 
     const { data: academy } = await supabase
@@ -35,8 +33,7 @@ export async function POST(req: NextRequest) {
 - FAQ: ${JSON.stringify(academy.faq || {})}
 학부모의 질문에 친절하고 정확하게 답변해주세요. 모르는 정보는 학원에 직접 문의를 안내하세요.
 답변은 카카오톡 메시지에 적합하게 간결하게 작성해주세요.
-마크다운 문법(#, ##, **, -, --- 등)은 절대 사용하지 마세요.
-이모지는 자연스럽게 사용해도 됩니다.
+마크다운 문법(#, ##, **, -, --- 등)은 절대 사용하지 마세요. 일반 텍스트와 이모지만 사용하세요.`
       : "당신은 학원 AI 상담 매니저입니다.";
 
     const response = await anthropic.messages.create({
@@ -47,15 +44,14 @@ export async function POST(req: NextRequest) {
     });
 
     const rawReply = response.content[0].type === "text"
-  ? response.content[0].text
-  : "죄송합니다. 다시 시도해주세요.";
+      ? response.content[0].text
+      : "죄송합니다. 다시 시도해주세요.";
 
-const reply = rawReply
-  .replace(/#{1,6}\s*/g, "")
-  .replace(/\*\*(.+?)\*\*/g, "$1")
-  .replace(/\*(.+?)\*/g, "$1")
-  .replace(/---/g, "")
-  .replace(/^\s*[-•]\s/gm, "- ");
+    const reply = rawReply
+      .replace(/#{1,6} /g, "")
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/\*(.+?)\*/g, "$1")
+      .replace(/---/g, "");
 
     return NextResponse.json({
       version: "2.0",
