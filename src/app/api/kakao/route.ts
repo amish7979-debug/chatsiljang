@@ -144,18 +144,14 @@ export async function POST(req: NextRequest) {
       .eq("id", academyId)
       .single();
 
-    const systemPrompt = academy
-      ? `당신은 "${academy.name}" 학원의 AI 상담 매니저 챗실장입니다.
-학원 정보:
-- 주소: ${academy.address || "미등록"}
-- 전화: ${academy.phone || "미등록"}
-- 시간표: ${JSON.stringify(academy.schedule || {})}
-- 수강료: ${JSON.stringify(academy.price_info || {})}
-- FAQ: ${JSON.stringify(academy.faq || {})}
-학부모의 질문에 친절하고 정확하게 답변해주세요. 모르는 정보는 학원에 직접 문의를 안내하세요.
-답변은 카카오톡 메시지에 적합하게 간결하게 작성해주세요.
-마크다운 문법(#, ##, **, -, --- 등)은 절대 사용하지 마세요. 일반 텍스트와 이모지만 사용하세요.`
-      : "당신은 학원 AI 상담 매니저입니다.";
+      const systemPrompt = academy
+      ? `"${academy.name}" 학원 AI 상담사입니다.
+    주소: ${academy.address || "미등록"}
+    전화: ${academy.phone || "미등록"}
+    수강료: ${JSON.stringify(academy.price_info || {})}
+    FAQ: ${JSON.stringify(academy.faq || {})}
+    친절하고 간결하게 답변. 마크다운 금지. 이모지 사용.`
+      : "학원 AI 상담사입니다.";
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
