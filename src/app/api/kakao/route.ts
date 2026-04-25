@@ -38,8 +38,8 @@ export async function POST(req: NextRequest) {
     const userMessage = body.userRequest?.utterance || "";
     const channelId = body.bot?.id || "";
     const academyMap: Record<string, string> = {
-      "햇살줄넘기": "10feabe1-5f62-4e92-b485-6146a7539c5d",
-      "뮤엠영어": "30333e1b-8ebd-4e19-b17a-f33c7fb22d43",
+      "10feabe1-5f62-4e92-b485-6146a7539c5d": "10feabe1-5f62-4e92-b485-6146a7539c5d",
+  "69ec58d44609e56adc740ef9": "30333e1b-8ebd-4e19-b17a-f33c7fb22d43",
     };
     const academyId = academyMap[channelId] || "30333e1b-8ebd-4e19-b17a-f33c7fb22d43";
 
