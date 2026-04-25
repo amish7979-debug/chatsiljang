@@ -11,11 +11,73 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+function removeMarkdown(text: string): string {
+  return text
+    .replace(/#{1,6} /g, "")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/---/g, "");
+}
+
+function parseReservationInfo(message: string) {
+  const nameMatch = message.match(/이름[:\s]*([^\s,]+)/);
+  const phoneMatch = message.match(/연락처[:\s]*([0-9\-]+)/);
+  const dateMatch = message.match(/날짜[:\s]*([^\s,]+)/);
+  const classMatch = message.match(/수업[:\s]*([^\s,]+)/);
+  return {
+    name: nameMatch?.[1] || null,
+    phone: phoneMatch?.[1] || null,
+    date: dateMatch?.[1] || null,
+    classType: classMatch?.[1] || null,
+  };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const userMessage = body.userRequest?.utterance || "";
     const academyId = "10feabe1-5f62-4e92-b485-6146a7539c5d";
+
+    // 예약 정보가 포함된 메시지인지 확인
+    const hasReservationInfo =
+      userMessage.includes("이름:") && userMessage.includes("연락처:");
+
+    // 예약 의도 감지
+    const isReservation =
+      userMessage.includes("예약") ||
+      userMessage.includes("체험") ||
+      userMessage.includes("신청");
+
+    // 예약 정보 저장 처리
+    if (hasReservationInfo) {
+      const info = parseReservationInfo(userMessage);
+      if (info.name && info.phone) {
+        await supabase.from("reservations").insert({
+          academy_id: academyId,
+          parent_name: info.name,
+          phone: info.phone,
+          desired_date: info.date || "미정",
+          class_type: info.classType || "체험수업",
+          status: "pending",
+        });
+        return NextResponse.json({
+          version: "2.0",
+          template: {
+            outputs: [{ simpleText: { text: `예약이 완료되었습니다! 🎉\n\n이름: ${info.name}\n연락처: ${info.phone}\n희망날짜: ${info.date || "미정"}\n\n학원에서 곧 연락드리겠습니다. 감사합니다! 😊` } }],
+          },
+        });
+      }
+    }
+
+    // 예약 안내
+    if (isReservation) {
+      return NextResponse.json({
+        version: "2.0",
+        template: {
+          outputs: [{ simpleText: { text: "체험수업 예약을 도와드릴게요! 😊\n\n아래 형식으로 보내주세요:\n\n이름: 홍길동\n연락처: 010-1234-5678\n날짜: 5월 3일\n수업: 수학" } }],
+        },
+      });
+    }
 
     const { data: academy } = await supabase
       .from("academies")
