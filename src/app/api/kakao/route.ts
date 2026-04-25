@@ -20,15 +20,15 @@ function removeMarkdown(text: string): string {
 }
 
 function parseReservationInfo(message: string) {
-  const nameMatch = message.match(/이름[:\s]*([^\s,]+)/);
-  const phoneMatch = message.match(/연락처[:\s]*([0-9\-]+)/);
-  const dateMatch = message.match(/날짜[:\s]*([^\s,]+)/);
-  const classMatch = message.match(/수업[:\s]*([^\s,]+)/);
+  const nameMatch = message.match(/이름\s*[:：]\s*([^\s\n,]+)/);
+  const phoneMatch = message.match(/연락처\s*[:：]\s*([0-9\-]+)/);
+  const dateMatch = message.match(/날짜\s*[:：]\s*([^\n,]+)/);
+  const classMatch = message.match(/수업\s*[:：]\s*([^\n,]+)/);
   return {
-    name: nameMatch?.[1] || null,
-    phone: phoneMatch?.[1] || null,
-    date: dateMatch?.[1] || null,
-    classType: classMatch?.[1] || null,
+    name: nameMatch?.[1]?.trim() || null,
+    phone: phoneMatch?.[1]?.trim() || null,
+    date: dateMatch?.[1]?.trim() || null,
+    classType: classMatch?.[1]?.trim() || null,
   };
 }
 
