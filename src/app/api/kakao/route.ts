@@ -48,6 +48,58 @@ export async function POST(req: NextRequest) {
       userMessage.includes("체험") ||
       userMessage.includes("신청");
 
+      // 맞춤수업 추천 의도 감지
+      const isRecommendation =
+      userMessage.includes("추천") ||
+      userMessage.includes("맞춤") ||
+      userMessage.includes("어떤 수업");
+
+    // 추천 정보가 포함된 메시지인지 확인
+    const hasRecommendationInfo =
+      userMessage.includes("학년") && userMessage.includes("과목");
+
+    // 맞춤수업 추천 처리
+    if (hasRecommendationInfo) {
+      const { data: academy } = await supabase
+        .from("academies")
+        .select("*")
+        .eq("id", academyId)
+        .single();
+
+      const recommendPrompt = `당신은 "${academy?.name || "학원"}" 학원의 AI 상담 매니저입니다.
+학원 수업 정보: ${JSON.stringify(academy?.price_info || {})}
+학부모가 보낸 정보: ${userMessage}
+위 정보를 바탕으로 아이에게 맞는 수업을 친절하게 추천해주세요.
+마크다운 없이 일반 텍스트와 이모지만 사용하세요.`;
+
+      const response = await anthropic.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 500,
+        messages: [{ role: "user", content: recommendPrompt }],
+      });
+
+      const rawReply = response.content[0].type === "text"
+        ? response.content[0].text
+        : "죄송합니다. 다시 시도해주세요.";
+
+      return NextResponse.json({
+        version: "2.0",
+        template: {
+          outputs: [{ simpleText: { text: removeMarkdown(rawReply) } }],
+        },
+      });
+    }
+
+    // 맞춤수업 추천 안내
+    if (isRecommendation) {
+      return NextResponse.json({
+        version: "2.0",
+        template: {
+          outputs: [{ simpleText: { text: "맞춤 수업을 추천해드릴게요! 😊\n\n아래 형식으로 보내주세요:\n\n학년: 초등 3학년\n과목: 수학\n목표: 기초 다지기" } }],
+        },
+      });
+    }
+
     // 예약 정보 저장 처리
     if (hasReservationInfo) {
       const info = parseReservationInfo(userMessage);
