@@ -36,7 +36,12 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const userMessage = body.userRequest?.utterance || "";
-    const academyId = "10feabe1-5f62-4e92-b485-6146a7539c5d";
+    const channelId = body.bot?.id || "";
+    const academyMap: Record<string, string> = {
+      "햇살줄넘기": "10feabe1-5f62-4e92-b485-6146a7539c5d",
+      "뮤엠영어": "30333e1b-8ebd-4e19-b17a-f33c7fb22d43",
+    };
+    const academyId = academyMap[channelId] || "30333e1b-8ebd-4e19-b17a-f33c7fb22d43";
 
     // 예약 정보가 포함된 메시지인지 확인
     const hasReservationInfo =
