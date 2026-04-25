@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
   : "죄송합니다. 다시 시도해주세요.";
 
 const reply = rawReply
+  .replace(/#{1,6}\s*/g, "")
   .replace(/\*\*(.+?)\*\*/g, "$1")
   .replace(/\*(.+?)\*/g, "$1")
   .replace(/---/g, "")
