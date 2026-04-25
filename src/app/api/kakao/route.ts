@@ -46,9 +46,16 @@ export async function POST(req: NextRequest) {
       messages: [{ role: "user", content: userMessage }],
     });
 
-    const reply = response.content[0].type === "text"
-      ? response.content[0].text
-      : "죄송합니다. 다시 시도해주세요.";
+    const rawReply = response.content[0].type === "text"
+  ? response.content[0].text
+  : "죄송합니다. 다시 시도해주세요.";
+
+const reply = rawReply
+  .replace(/#{1,6}\s/g, "")
+  .replace(/\*\*(.*?)\*\*/g, "$1")
+  .replace(/\*(.*?)\*/g, "$1")
+  .replace(/---/g, "")
+  .replace(/^\s*[-•]\s/gm, "- ");
 
     return NextResponse.json({
       version: "2.0",
