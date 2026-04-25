@@ -44,6 +44,26 @@ export async function POST(req: NextRequest) {
     };
     const academyId = academyMap[channelId] || "30333e1b-8ebd-4e19-b17a-f33c7fb22d43";
 
+    // FAQ 키워드 매칭
+const { data: academyForFaq } = await supabase
+  .from("academies")
+  .select("faq")
+  .eq("id", academyId)
+  .single();
+
+if (academyForFaq?.faq && Array.isArray(academyForFaq.faq)) {
+  const matchedFaq = academyForFaq.faq.find((item: any) =>
+    userMessage.includes(item.question.replace("?", "").replace("？", "").trim().substring(0, 5))
+  );
+  if (matchedFaq) {
+    return NextResponse.json({
+      version: "2.0",
+      template: {
+        outputs: [{ simpleText: { text: matchedFaq.answer } }],
+      },
+    });
+  }
+}
     const isPriceQuestion = 
   userMessage.includes("수강료") ||
   userMessage.includes("가격") ||
