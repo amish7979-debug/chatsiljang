@@ -18,13 +18,148 @@ const DEFAULT_BUTTONS = [
 ];
 
 type MessageRole = "user" | "assistant";
+type MessageType = "text" | "reservation_form";
 type ChatMessage = {
   id: string;
   role: MessageRole;
   content: string;
+  type?: MessageType;
   createdAt: Date;
 };
 type QuickButton = { label: string; text: string };
+
+const RESERVATION_KEYWORDS = ["체험", "예약", "신청"];
+
+function isReservationIntent(text: string) {
+  return RESERVATION_KEYWORDS.some((kw) => text.includes(kw));
+}
+
+function ReservationFormCard({
+  onSuccess,
+}: {
+  onSuccess: () => void;
+}) {
+  const [studentName, setStudentName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [desiredDate, setDesiredDate] = useState("");
+  const [desiredTime, setDesiredTime] = useState("");
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!studentName.trim() || !phone.trim() || !desiredDate.trim()) {
+      setError("학생 이름, 연락처, 희망 날짜는 필수입니다.");
+      return;
+    }
+    setError("");
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/reservation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          academyId: ACADEMY_ID,
+          studentName: studentName.trim(),
+          phone: phone.trim(),
+          desiredDate: desiredDate.trim(),
+          desiredTime: desiredTime.trim() || undefined,
+          notes: notes.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "예약에 실패했어요. 다시 시도해주세요.");
+        return;
+      }
+      onSuccess();
+    } catch {
+      setError("오류가 발생했어요. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const inputClass =
+    "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#0f766e] focus:ring-1 focus:ring-[#0f766e]";
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 w-full min-w-[260px]"
+    >
+      <h3 className="text-[#0f766e] font-semibold text-sm mb-3">📅 체험수업 예약</h3>
+      <div className="flex flex-col gap-2.5">
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-600">
+            학생 이름 <span className="text-[#0f766e]">*</span>
+          </span>
+          <input
+            type="text"
+            value={studentName}
+            onChange={(e) => setStudentName(e.target.value)}
+            placeholder="홍길동"
+            className={inputClass}
+            required
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-600">
+            연락처 <span className="text-[#0f766e]">*</span>
+          </span>
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="010-1234-5678"
+            className={inputClass}
+            required
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-600">
+            희망 날짜 <span className="text-[#0f766e]">*</span>
+          </span>
+          <input
+            type="date"
+            value={desiredDate}
+            onChange={(e) => setDesiredDate(e.target.value)}
+            className={inputClass}
+            required
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-600">희망 시간</span>
+          <input
+            type="time"
+            value={desiredTime}
+            onChange={(e) => setDesiredTime(e.target.value)}
+            className={inputClass}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-gray-600">기타 사항</span>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="궁금한 점이나 요청사항을 적어주세요"
+            rows={2}
+            className={`${inputClass} resize-none`}
+          />
+        </label>
+      </motionFields>
+      {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
+      <button
+        type="submit"
+        disabled={submitting}
+        className="mt-3 w-full rounded-lg bg-[#0f766e] text-white text-sm font-medium py-2.5 hover:bg-[#0d6460] disabled:opacity-50 active:scale-[0.98] transition-all"
+      >
+        {submitting ? "제출 중..." : "예약 신청하기"}
+      </button>
+    </form>
+  );
+}
 
 function formatTime(date: Date) {
   const h = date.getHours();
