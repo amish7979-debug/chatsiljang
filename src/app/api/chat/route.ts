@@ -14,23 +14,17 @@ function removeMarkdown(text: string): string {
 
 function findFaqMatch(faq: {question: string; answer: string}[], message: string): string | null {
   const msg = message.toLowerCase().trim();
-  
   for (const item of faq) {
     const q = item.question.toLowerCase().trim();
-    
-    // 1. 질문이 완전히 포함되는 경우
     if (msg.includes(q) || q.includes(msg)) return item.answer;
-    
-    // 2. 핵심 키워드 2개 이상 동시에 매칭되는 경우만 허용
     const keywords = q.split(/[\s,?!.~]+/).filter(k => k.length > 2);
     const matchCount = keywords.filter(k => msg.includes(k)).length;
-    
-    if (keywords.length > 0 && matchCount >= Math.min(2, keywords.length)) {
-      return item.answer;
-    }
+    if (keywords.length > 0 && matchCount >= Math.min(2, keywords.length)) return item.answer;
   }
   return null;
 }
+
+const ACTION_BUTTONS = [{ label: "체험수업 예약하기", text: "체험수업 예약하고 싶어요" }];
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,14 +41,25 @@ export async function POST(req: NextRequest) {
 
     if (!academy) return NextResponse.json({ reply: "학원 정보를 찾을 수 없어요." }, { status: 404 });
 
+    // FAQ 매칭 먼저 시도
     if (academy.faq && Array.isArray(academy.faq)) {
       const faqAnswer = findFaqMatch(academy.faq, message);
-      if (faqAnswer) return NextResponse.json({ reply: faqAnswer });
+      if (faqAnswer) {
+        return NextResponse.json({
+          reply: faqAnswer + "\n\n학원 등록 정보 기준으로 안내드렸어요.",
+          buttons: ACTION_BUTTONS
+        });
+      }
     }
 
+    // AI 답변
     const systemPrompt = `당신은 ${academy.name} 학원의 친절한 AI 상담사입니다.
-아래 학원 정보를 바탕으로 학부모 질문에 답변하세요.
-마크다운 기호는 절대 사용하지 마세요. 자연스러운 한국어로 짧고 친절하게 답변하세요.
+반드시 아래 학원 정보와 Q&A만 근거로 답변하세요.
+수강료, 시간표, 보강, 할인, 등록 가능 여부는 절대 추측하지 마세요.
+정보가 없으면 "원장님 확인 후 안내드리겠습니다"라고 답하세요.
+답변은 4~6문장 이내로 작성하세요.
+마크다운 기호는 절대 사용하지 마세요.
+자연스러운 한국어로 짧고 친절하게 답변하세요.
 
 [학원 정보]
 학원명: ${academy.name}
@@ -66,18 +71,28 @@ FAQ: ${JSON.stringify(academy.faq || [])}`;
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 500,
+      max_tokens: 400,
       system: systemPrompt,
       messages: [{ role: "user", content: message }],
     });
 
-    const reply = removeMarkdown(
-      response.content[0].type === "text" ? response.content[0].text : "답변을 생성하지 못했어요."
-    );
+    const aiText = response.content[0].type === "text" ? response.content[0].text : "";
+    const isUncertain = aiText.includes("원장님 확인") || aiText.includes("정보가 없") || aiText.includes("확인이 필요");
 
-    return NextResponse.json({ reply });
+    const reply = removeMarkdown(aiText || "답변을 생성하지 못했어요.");
+    const finalReply = reply + "\n\n햇살피아노의 등록된 상담 정보를 바탕으로 답변드렸습니다.";
+
+    const buttons = isUncertain
+      ? [
+          { label: "✉️ 원장님께 문의", text: "원장님께 문의 남기기" },
+          { label: "📅 체험수업 예약", text: "체험수업 예약하고 싶어요" },
+        ]
+      : ACTION_BUTTONS;
+
+    return NextResponse.json({ reply: finalReply, buttons });
   } catch (error) {
     console.error("API error:", error);
     return NextResponse.json({ reply: "오류가 발생했어요." }, { status: 500 });
   }
 }
+
