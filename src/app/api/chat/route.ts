@@ -16,43 +16,48 @@ function findFaqMatch(faq: {question: string; answer: string}[], message: string
   const msg = message.toLowerCase().trim();
   for (const item of faq) {
     const q = item.question.toLowerCase().trim();
-    if (msg.includes(q) || q.includes(msg)) return item.answer;
-    const keywords = q.split(/[\s,?!.~]+/).filter(k => k.length > 2);
+    if (msg === q || msg.includes(q) || q.includes(msg)) return item.answer;
+    const keywords = q.split(/[\s,?!.~]+/).filter(k => k.length > 1);
     const matchCount = keywords.filter(k => msg.includes(k)).length;
-    if (keywords.length > 0 && matchCount >= Math.min(2, keywords.length)) return item.answer;
+    const score = matchCount / keywords.length;
+    if (matchCount >= 2 && score >= 0.7) return item.answer;
   }
   return null;
 }
 
-const ACTION_BUTTONS = [{ label: "체험수업 예약하기", text: "체험수업 예약하고 싶어요" }];
+const ACTION_BUTTONS = [
+  { label: "체험수업 예약하기", text: "체험수업 예약하고 싶어요" },
+];
 
 export async function POST(req: NextRequest) {
   try {
     const { message, academyId } = await req.json();
     if (!message || !academyId) return NextResponse.json({ reply: "요청 정보가 부족해요." }, { status: 400 });
 
-    const { data: academy, error } = await supabase
+    const { data: academy } = await supabase
       .from("academies")
-      .select("*")
+      .select("name, phone, address, price_info, schedule")
       .eq("id", academyId)
       .single();
 
-    console.log("academy:", academy?.name, "error:", error);
+    const { data: faqData } = await supabase
+      .from("faq")
+      .select("question, answer, category")
+      .eq("academy_id", academyId)
+      .order("sort_order");
 
     if (!academy) return NextResponse.json({ reply: "학원 정보를 찾을 수 없어요." }, { status: 404 });
 
-    // FAQ 매칭 먼저 시도
-    if (academy.faq && Array.isArray(academy.faq)) {
-      const faqAnswer = findFaqMatch(academy.faq, message);
-      if (faqAnswer) {
-        return NextResponse.json({
-          reply: faqAnswer + "\n\n학원 등록 정보 기준으로 안내드렸어요.",
-          buttons: ACTION_BUTTONS
-        });
-      }
+    const faq = faqData || [];
+
+    const faqAnswer = findFaqMatch(faq, message);
+    if (faqAnswer) {
+      return NextResponse.json({
+        reply: faqAnswer + "\n\n학원 등록 정보 기준으로 안내드렸어요.",
+        buttons: ACTION_BUTTONS
+      });
     }
 
-    // AI 답변
     const systemPrompt = `당신은 ${academy.name} 학원의 친절한 AI 상담사입니다.
 반드시 아래 학원 정보와 Q&A만 근거로 답변하세요.
 수강료, 시간표, 보강, 할인, 등록 가능 여부는 절대 추측하지 마세요.
@@ -67,7 +72,7 @@ export async function POST(req: NextRequest) {
 주소: ${academy.address || "없음"}
 수강료: ${JSON.stringify(academy.price_info || {})}
 시간표: ${JSON.stringify(academy.schedule || {})}
-FAQ: ${JSON.stringify(academy.faq || [])}`;
+FAQ: ${JSON.stringify(faq)}`;
 
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
@@ -78,14 +83,13 @@ FAQ: ${JSON.stringify(academy.faq || [])}`;
 
     const aiText = response.content[0].type === "text" ? response.content[0].text : "";
     const isUncertain = aiText.includes("원장님 확인") || aiText.includes("정보가 없") || aiText.includes("확인이 필요");
-
     const reply = removeMarkdown(aiText || "답변을 생성하지 못했어요.");
     const finalReply = reply + "\n\n햇살피아노의 등록된 상담 정보를 바탕으로 답변드렸습니다.";
 
     const buttons = isUncertain
       ? [
-          { label: "✉️ 원장님께 문의", text: "원장님께 문의 남기기" },
-          { label: "📅 체험수업 예약", text: "체험수업 예약하고 싶어요" },
+          { label: "원장님께 문의", text: "원장님께 문의 남기기" },
+          { label: "체험수업 예약하기", text: "체험수업 예약하고 싶어요" },
         ]
       : ACTION_BUTTONS;
 
@@ -95,4 +99,3 @@ FAQ: ${JSON.stringify(academy.faq || [])}`;
     return NextResponse.json({ reply: "오류가 발생했어요." }, { status: 500 });
   }
 }
-

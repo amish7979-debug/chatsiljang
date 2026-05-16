@@ -13,7 +13,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "챗실장",
+  title: "상담온",
   description: "소규모 학원을 위한 AI 상담 매니저",
 };
 

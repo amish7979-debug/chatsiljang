@@ -64,6 +64,7 @@ export default function AdminPageClient() {
         setError("학원 이름을 입력해 주세요.");
         return;
       }
+
       const payload = {
         academyName: academyName.trim(),
         phone: phone.trim(),
@@ -76,6 +77,7 @@ export default function AdminPageClient() {
           .map(({ day, time }) => ({ day, time })),
         faq: [],
       };
+
       setSaving(true);
       try {
         const res = await fetch("/api/academies", {
@@ -84,12 +86,16 @@ export default function AdminPageClient() {
           body: JSON.stringify(payload),
         });
         const data = (await res.json()) as { error?: string; id?: string };
-        if (!res.ok) throw new Error(data.error || "저장에 실패했습니다.");
+        if (!res.ok) {
+          throw new Error(data.error || "저장에 실패했습니다.");
+        }
         setSaved(true);
         window.setTimeout(() => setSaved(false), 4000);
       } catch (err) {
         setSaved(false);
-        setError(err instanceof Error ? err.message : "저장 중 오류가 발생했습니다.");
+        setError(
+          err instanceof Error ? err.message : "저장 중 오류가 발생했습니다.",
+        );
       } finally {
         setSaving(false);
       }
@@ -97,24 +103,32 @@ export default function AdminPageClient() {
     [academyName, phone, address, tuitionRows, scheduleRows],
   );
 
-  const inputClass = "mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 shadow-sm transition placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400/20";
+  const inputClass =
+    "mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 shadow-sm transition placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-indigo-400 dark:focus:ring-indigo-400/20";
   const labelClass = "text-sm font-medium text-zinc-700 dark:text-zinc-300";
-  const cardClass = "rounded-2xl border border-zinc-200/90 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 sm:p-8";
-  const sectionTitle = "text-lg font-semibold tracking-tight text-zinc-900 dark:text-white";
+  const cardClass =
+    "rounded-2xl border border-zinc-200/90 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 sm:p-8";
+  const sectionTitle =
+    "text-lg font-semibold tracking-tight text-zinc-900 dark:text-white";
 
   return (
     <div className="flex min-h-full flex-1 flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       <header className="sticky top-0 z-10 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
-            <Link href="/hub" className="text-sm font-medium text-zinc-500 transition hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
-              허브
+            <Link
+              href="/hub"
+              className="text-sm font-medium text-zinc-500 transition hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+            >
+              ← 허브
             </Link>
             <span className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
               학원 정보 관리
             </span>
           </div>
-          <span className="text-sm text-zinc-500 dark:text-zinc-400">상담온</span>
+          <span className="text-sm text-zinc-500 dark:text-zinc-400">
+            상담온
+          </span>
         </div>
       </header>
 
@@ -134,15 +148,39 @@ export default function AdminPageClient() {
               <div className="mt-6 space-y-5">
                 <div>
                   <label htmlFor="academy-name" className={labelClass}>학원 이름</label>
-                  <input id="academy-name" type="text" value={academyName} onChange={(e) => setAcademyName(e.target.value)} className={inputClass} placeholder="예: 햇살 피아노학원" autoComplete="organization" />
+                  <input
+                    id="academy-name"
+                    type="text"
+                    value={academyName}
+                    onChange={(e) => setAcademyName(e.target.value)}
+                    className={inputClass}
+                    placeholder="예: 햇살 피아노학원"
+                    autoComplete="organization"
+                  />
                 </div>
                 <div>
                   <label htmlFor="phone" className={labelClass}>전화번호</label>
-                  <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} placeholder="예: 02-1234-5678" autoComplete="tel" />
+                  <input
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className={inputClass}
+                    placeholder="예: 02-1234-5678"
+                    autoComplete="tel"
+                  />
                 </div>
                 <div>
                   <label htmlFor="address" className={labelClass}>주소</label>
-                  <textarea id="address" value={address} onChange={(e) => setAddress(e.target.value)} className={`${inputClass} min-h-[88px] resize-y`} placeholder="도로명 또는 지번 주소" rows={3} autoComplete="street-address" />
+                  <textarea
+                    id="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className={`${inputClass} min-h-[88px] resize-y`}
+                    placeholder="도로명 또는 지번 주소"
+                    rows={3}
+                    autoComplete="street-address"
+                  />
                 </div>
               </div>
             </div>
@@ -150,22 +188,49 @@ export default function AdminPageClient() {
             <div className={cardClass}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className={sectionTitle}>수강료</h2>
-                <button type="button" onClick={addTuition} className="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 transition hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800">
+                <button
+                  type="button"
+                  onClick={addTuition}
+                  className="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 transition hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                >
                   + 반 추가
                 </button>
               </div>
               <ul className="mt-6 space-y-4">
                 {tuitionRows.map((row, i) => (
-                  <li key={row.id} className="flex flex-col gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 dark:border-zinc-700 dark:bg-zinc-950/40 sm:flex-row sm:items-end">
+                  <li
+                    key={row.id}
+                    className="flex flex-col gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 dark:border-zinc-700 dark:bg-zinc-950/40 sm:flex-row sm:items-end"
+                  >
                     <div className="min-w-0 flex-1">
                       <label className={labelClass}>반 이름</label>
-                      <input type="text" value={row.className} onChange={(e) => updateTuition(row.id, "className", e.target.value)} className={inputClass} placeholder="예: 초등 A반" aria-label={`수강료 반 이름 ${i + 1}`} />
+                      <input
+                        type="text"
+                        value={row.className}
+                        onChange={(e) => updateTuition(row.id, "className", e.target.value)}
+                        className={inputClass}
+                        placeholder="예: 초등 A반"
+                        aria-label={`수강료 반 이름 ${i + 1}`}
+                      />
                     </div>
                     <div className="min-w-0 flex-1 sm:max-w-[200px]">
                       <label className={labelClass}>수강료</label>
-                      <input type="text" inputMode="numeric" value={row.fee} onChange={(e) => updateTuition(row.id, "fee", e.target.value)} className={inputClass} placeholder="예: 240,000원" aria-label={`수강료 금액 ${i + 1}`} />
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={row.fee}
+                        onChange={(e) => updateTuition(row.id, "fee", e.target.value)}
+                        className={inputClass}
+                        placeholder="예: 240,000원"
+                        aria-label={`수강료 금액 ${i + 1}`}
+                      />
                     </div>
-                    <button type="button" onClick={() => removeTuition(row.id)} className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 transition hover:bg-zinc-200/80 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-200" aria-label={`수강료 행 ${i + 1} 삭제`}>
+                    <button
+                      type="button"
+                      onClick={() => removeTuition(row.id)}
+                      className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 transition hover:bg-zinc-200/80 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                      aria-label={`수강료 행 ${i + 1} 삭제`}
+                    >
                       삭제
                     </button>
                   </li>
@@ -176,16 +241,28 @@ export default function AdminPageClient() {
             <div className={cardClass}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className={sectionTitle}>시간표</h2>
-                <button type="button" onClick={addSchedule} className="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 transition hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800">
+                <button
+                  type="button"
+                  onClick={addSchedule}
+                  className="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 transition hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                >
                   + 시간 추가
                 </button>
               </div>
               <ul className="mt-6 space-y-4">
                 {scheduleRows.map((row, i) => (
-                  <li key={row.id} className="flex flex-col gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 dark:border-zinc-700 dark:bg-zinc-950/40 sm:flex-row sm:items-end">
+                  <li
+                    key={row.id}
+                    className="flex flex-col gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 dark:border-zinc-700 dark:bg-zinc-950/40 sm:flex-row sm:items-end"
+                  >
                     <div className="min-w-0 sm:w-36">
                       <label className={labelClass}>요일</label>
-                      <select value={row.day} onChange={(e) => updateSchedule(row.id, "day", e.target.value)} className={inputClass} aria-label={`시간표 요일 ${i + 1}`}>
+                      <select
+                        value={row.day}
+                        onChange={(e) => updateSchedule(row.id, "day", e.target.value)}
+                        className={inputClass}
+                        aria-label={`시간표 요일 ${i + 1}`}
+                      >
                         {WEEKDAYS.map((d) => (
                           <option key={d} value={d}>{d}요일</option>
                         ))}
@@ -193,9 +270,21 @@ export default function AdminPageClient() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <label className={labelClass}>시간</label>
-                      <input type="text" value={row.time} onChange={(e) => updateSchedule(row.id, "time", e.target.value)} className={inputClass} placeholder="예: 16:00-17:30" aria-label={`시간표 시간 ${i + 1}`} />
+                      <input
+                        type="text"
+                        value={row.time}
+                        onChange={(e) => updateSchedule(row.id, "time", e.target.value)}
+                        className={inputClass}
+                        placeholder="예: 16:00–17:30"
+                        aria-label={`시간표 시간 ${i + 1}`}
+                      />
                     </div>
-                    <button type="button" onClick={() => removeSchedule(row.id)} className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 transition hover:bg-zinc-200/80 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-200" aria-label={`시간표 행 ${i + 1} 삭제`}>
+                    <button
+                      type="button"
+                      onClick={() => removeSchedule(row.id)}
+                      className="shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-zinc-500 transition hover:bg-zinc-200/80 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                      aria-label={`시간표 행 ${i + 1} 삭제`}
+                    >
                       삭제
                     </button>
                   </li>
@@ -206,7 +295,10 @@ export default function AdminPageClient() {
             <div className={cardClass}>
               <div className="flex items-center justify-between">
                 <h2 className={sectionTitle}>FAQ 관리</h2>
-                <a href="/qna" className="text-sm text-[#0f766e] border border-[#0f766e] rounded-lg px-3 py-1.5 hover:bg-[#f0fdfa]">
+                
+                  href="/qna"
+                  className="inline-flex items-center gap-1 text-sm text-[#0f766e] border border-[#0f766e] rounded-lg px-3 py-1.5 hover:bg-[#f0fdfa]"
+                >
                   Q&A 관리 페이지로 →
                 </a>
               </div>
@@ -223,8 +315,12 @@ export default function AdminPageClient() {
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">저장하면 academies 테이블에 새 행이 추가됩니다.</p>
                 )}
               </div>
-              <button type="submit" disabled={saving} className="inline-flex w-full items-center justify-center rounded-lg bg-[#0f766e] px-8 py-3.5 text-base font-semibold text-white shadow-md transition hover:bg-[#0d6460] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-60 sm:w-auto">
-                {saving ? "저장 중..." : "저장"}
+              <button
+                type="submit"
+                disabled={saving}
+                className="inline-flex w-full items-center justify-center rounded-lg bg-[#0f766e] px-8 py-3.5 text-base font-semibold text-white shadow-md transition hover:bg-[#0d6460] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-60 sm:w-auto"
+              >
+                {saving ? "저장 중…" : "저장"}
               </button>
             </div>
           </form>
@@ -234,7 +330,7 @@ export default function AdminPageClient() {
       <footer className="mt-auto border-t border-zinc-200/80 bg-white py-8 dark:border-zinc-800 dark:bg-zinc-950">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-sm text-zinc-500 sm:flex-row sm:px-6 lg:px-8">
           <span className="font-medium text-zinc-700 dark:text-zinc-300">
-            상담온
+            © {new Date().getFullYear()} 상담온
           </span>
           <Link href="/hub" className="font-medium text-[#0f766e] hover:text-[#0d6460]">
             허브로

@@ -8,9 +8,12 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
-    const { academyId, studentName, phone, desiredDate, desiredTime, notes } = await req.json();
+    const body = await req.json();
+    const { academyId, studentName, phone, notes } = body;
+    const desiredDate = body.desiredDate || body.desired_date || "";
+    const classType = body.class_type || body.classType || "체험수업";
 
-    if (!academyId || !studentName || !phone || !desiredDate) {
+    if (!academyId || !studentName || !phone) {
       return NextResponse.json({ success: false, message: "필수 항목을 입력해주세요." }, { status: 400 });
     }
 
@@ -18,8 +21,8 @@ export async function POST(req: NextRequest) {
       academy_id: academyId,
       parent_name: studentName,
       phone: phone,
-      desired_date: desiredDate + (desiredTime ? " " + desiredTime : ""),
-      class_type: "체험수업",
+      desired_date: desiredDate,
+      class_type: classType,
       status: "pending",
     });
 

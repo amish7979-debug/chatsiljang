@@ -18,7 +18,7 @@ export default function AdminPage() {
   const [error, setError] = useState("");
 
   const handleLogin = () => {
-    if (password === "chatsiljang2024!") {
+    if (password === "1234") {
       setIsAuthenticated(true);
       setError("");
     } else {
@@ -31,7 +31,7 @@ export default function AdminPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950">
         <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-md dark:bg-zinc-900">
           <h1 className="mb-6 text-center text-2xl font-bold text-zinc-800 dark:text-zinc-100">
-            🔒 챗실장 관리자
+            🔒 상담온 관리자
           </h1>
           <input
             type="password"
