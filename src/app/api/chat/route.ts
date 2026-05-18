@@ -3,10 +3,6 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@supabase/supabase-js";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 function removeMarkdown(text: string): string {
   return text.replace(/##|###|\*\*|__|--|~~|\*/g, "").trim();
@@ -30,23 +26,38 @@ const ACTION_BUTTONS = [
 ];
 
 export async function POST(req: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   try {
     const { message, academyId } = await req.json();
     if (!message || !academyId) return NextResponse.json({ reply: "요청 정보가 부족해요." }, { status: 400 });
 
-    const { data: academy } = await supabase
+    console.log("URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(0, 20));
+    console.log("academyId:", academyId);
+
+    const { data: academy, error: academyError } = await supabase
       .from("academies")
       .select("name, phone, address, price_info, schedule")
       .eq("id", academyId)
       .single();
 
-    const { data: faqData } = await supabase
+    console.log("academy:", academy);
+    console.log("academyError:", JSON.stringify(academyError));
+
+    const { data: faqData, error: faqError } = await supabase
       .from("faq")
       .select("question, answer, category")
       .eq("academy_id", academyId)
       .order("sort_order");
 
-    if (!academy) return NextResponse.json({ reply: "학원 정보를 찾을 수 없어요." }, { status: 404 });
+    console.log("faqData:", faqData);
+    console.log("faqError:", JSON.stringify(faqError));
+
+    if (!academy) return NextResponse.json({ reply: "학원 정보를 찾을 수 없어요. 에러: " + JSON.stringify(academyError) }, { status: 404 });
 
     const faq = faqData || [];
 
