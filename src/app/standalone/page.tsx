@@ -59,34 +59,33 @@ function ReservationForm({ onSubmit, isLoading }: {
   const [showNotes, setShowNotes] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 ml-9 max-w-[260px] flex flex-col" style={{ maxHeight: "340px" }}>
-      <div className="flex-shrink-0 px-4 pt-4 pb-3 border-b border-gray-100">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm ml-9 max-w-[260px] flex flex-col" style={{ maxHeight: "340px" }}>
+      <div className="flex-shrink-0 px-4 pt-3 pb-2 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#ecfdf5] flex items-center justify-center flex-shrink-0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <rect x="3" y="4" width="18" height="18" rx="2" stroke="#0f766e" strokeWidth="2"/>
               <path d="M16 2v4M8 2v4M3 10h18" stroke="#0f766e" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </div>
           <div>
-            <div className="text-sm font-semibold text-gray-800">체험수업 예약 요청</div>
-            <div className="text-xs text-gray-400">원장님 확인 후 연락드립니다.</div>
+            <div className="text-[13px] font-semibold text-slate-800">체험수업 예약 요청</div>
+            <div className="text-[11px] text-slate-400">원장님 확인 후 연락드립니다.</div>
           </div>
         </div>
       </div>
-
       <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2">
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">학생 이름 <span className="text-red-400">*</span></label>
-          <input type="text" value={studentName} onChange={(e) => setStudentName(e.target.value)} placeholder="예) 김하늘" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0f766e]" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">학생 이름 <span className="text-red-400">*</span></label>
+          <input type="text" value={studentName} onChange={(e) => setStudentName(e.target.value)} placeholder="예) 김하늘" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">학년/나이 <span className="text-red-400">*</span></label>
-          <input type="text" value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="예) 초등 2학년, 7세" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0f766e]" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">학년/나이 <span className="text-red-400">*</span></label>
+          <input type="text" value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="예) 초등 2학년, 7세" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">피아노 경험 <span className="text-red-400">*</span></label>
-          <select value={experience} onChange={(e) => setExperience(e.target.value)} className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0f766e]">
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">피아노 경험 <span className="text-red-400">*</span></label>
+          <select value={experience} onChange={(e) => setExperience(e.target.value)} className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500">
             <option value="">선택해주세요</option>
             <option value="처음">처음이에요</option>
             <option value="6개월 미만">조금 배웠어요</option>
@@ -95,33 +94,32 @@ function ReservationForm({ onSubmit, isLoading }: {
           </select>
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">학부모 연락처 <span className="text-red-400">*</span></label>
-          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0f766e]" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">학부모 연락처 <span className="text-red-400">*</span></label>
+          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">희망 요일/시간 <span className="text-red-400">*</span></label>
-          <input type="text" value={desiredTime} onChange={(e) => setDesiredTime(e.target.value)} placeholder="예) 화목 오후 4시 이후" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0f766e]" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">희망 요일/시간 <span className="text-red-400">*</span></label>
+          <input type="text" value={desiredTime} onChange={(e) => setDesiredTime(e.target.value)} placeholder="예) 화목 오후 4시 이후" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         </div>
-        <button type="button" onClick={() => setShowNotes(!showNotes)} className="flex items-center justify-between w-full text-xs text-gray-500 py-1">
+        <button type="button" onClick={() => setShowNotes(!showNotes)} className="flex items-center justify-between w-full text-[11px] text-slate-400 py-1">
           <span>+ 기타 문의 남기기</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ transform: showNotes ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
-            <path d="M6 9l6 6 6-6" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round"/>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style={{ transform: showNotes ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
+            <path d="M6 9l6 6 6-6" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
         {showNotes && (
-          <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="궁금한 점을 입력해주세요" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0f766e]" />
+          <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="궁금한 점을 입력해주세요" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         )}
         <div className="flex items-start gap-2 pt-1">
-          <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5 accent-[#0f766e]" />
-          <label className="text-xs text-gray-400 leading-relaxed">개인정보 수집 및 이용 동의 (필수)</label>
+          <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5 accent-teal-700" />
+          <label className="text-[11px] text-slate-400 leading-relaxed">개인정보 수집 및 이용 동의 (필수)</label>
         </div>
       </div>
-
-      <div className="flex-shrink-0 px-4 pb-4 pt-2">
+      <div className="flex-shrink-0 px-4 pb-3 pt-2">
         <button
           onClick={() => { if (studentName && phone && desiredTime && agreed) onSubmit({ studentName, grade, experience, phone, desiredTime, notes }); }}
           disabled={!studentName || !phone || !desiredTime || !agreed || isLoading}
-          className="w-full bg-[#0f766e] text-white rounded-xl py-2.5 text-sm font-medium disabled:opacity-40 active:scale-95 transition-all"
+          className="w-full bg-teal-700 text-white rounded-xl py-2 text-[13px] font-semibold disabled:opacity-40 active:scale-95 transition-all hover:bg-teal-800"
         >
           {isLoading ? "요청 중..." : "예약 요청하기 →"}
         </button>
@@ -139,22 +137,22 @@ function InquiryForm({ onSubmit, isLoading }: {
   const [content, setContent] = useState("");
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 ml-9 max-w-[260px]">
-      <div className="text-sm font-semibold text-[#0f766e] mb-3">원장님께 문의</div>
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 ml-9 max-w-[260px]">
+      <div className="text-[13px] font-semibold text-teal-700 mb-3">원장님께 문의</div>
       <div className="flex flex-col gap-2">
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">이름 *</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="이름 입력" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-[#0f766e]" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">이름 *</label>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="이름 입력" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">연락처 *</label>
-          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-[#0f766e]" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">연락처 *</label>
+          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500" />
         </div>
         <div>
-          <label className="text-xs text-gray-500 mb-1 block">문의 내용 *</label>
-          <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="궁금하신 내용을 입력해주세요" rows={3} className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-[#0f766e] resize-none" />
+          <label className="text-[11px] font-medium text-slate-600 mb-1 block">문의 내용 *</label>
+          <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="궁금하신 내용을 입력해주세요" rows={3} className="w-full bg-slate-50 rounded-lg border border-slate-200 px-3 py-1.5 text-[13px] outline-none focus:border-teal-500 resize-none" />
         </div>
-        <button onClick={() => name && phone && content && onSubmit({ name, phone, content })} disabled={!name || !phone || !content || isLoading} className="w-full bg-[#0f766e] text-white rounded-xl py-2 text-sm font-medium disabled:opacity-40 active:scale-95 transition-all">
+        <button onClick={() => name && phone && content && onSubmit({ name, phone, content })} disabled={!name || !phone || !content || isLoading} className="w-full bg-teal-700 text-white rounded-xl py-2 text-[13px] font-semibold disabled:opacity-40 active:scale-95 transition-all hover:bg-teal-800">
           {isLoading ? "전송 중..." : "문의 보내기"}
         </button>
       </div>
@@ -271,21 +269,25 @@ function ChatWidget({ onClose, academyName }: { onClose: () => void; academyName
   };
 
   return (
-    <div className="flex flex-col bg-[#f0fdfa] overflow-hidden w-full h-full">
-      <div className="bg-[#0f766e] px-4 py-3 flex items-center gap-3 flex-shrink-0">
-        <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">상</div>
-        <div className="flex-1 min-w-0">
-          <div className="text-white font-semibold text-sm truncate">{academyName}</div>
-          <div className="text-white/80 text-xs flex items-center gap-1 mt-0.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-300 inline-block"></span>
-            AI 상담 중
+    <div className="flex flex-col bg-white overflow-hidden w-full h-full">
+      {/* 흰색 헤더 */}
+      <div className="h-[68px] bg-white px-5 flex items-center justify-between flex-shrink-0 border-b border-slate-200">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-teal-700 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">상</div>
+          <div>
+            <div className="text-slate-800 font-semibold text-[16px] leading-tight">{academyName}</div>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 inline-block"></span>
+              <span className="text-slate-500 text-[12px]">AI 상담 중</span>
+            </div>
           </div>
         </div>
-        <button onClick={onClose} className="text-white/80 hover:text-white text-xl leading-none px-1">X</button>
+        <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-xl leading-none px-1">×</button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-3">
-        <div className="text-center text-xs text-gray-400 my-1">오늘</div>
+      {/* 메시지 영역 */}
+      <div className="flex-1 overflow-y-auto bg-slate-50 px-4 py-4 flex flex-col gap-3">
+        <div className="text-center text-[11px] text-slate-400 mb-1">오늘</div>
         {messages.map((msg) => (
           <div key={msg.id}>
             {msg.type === "reservation_form" ? (
@@ -295,34 +297,34 @@ function ChatWidget({ onClose, academyName }: { onClose: () => void; academyName
             ) : (
               <div className={`flex items-end gap-2 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
                 {msg.role === "assistant" && (
-                  <div className="w-7 h-7 rounded-full bg-[#0f766e] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mb-1">상</div>
+                  <div className="w-7 h-7 rounded-full bg-teal-700 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0 mb-1">상</div>
                 )}
-                <div className={`flex flex-col gap-1 max-w-[75%] ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                  <div className={`px-3 py-2 text-sm leading-relaxed whitespace-pre-line ${
+                <div className={`flex flex-col gap-1 max-w-[82%] ${msg.role === "user" ? "items-end" : "items-start"}`}>
+                  <div className={`px-4 py-2.5 text-[14px] leading-6 whitespace-pre-line ${
                     msg.role === "user"
-                      ? "bg-[#0f766e] text-white rounded-tl-2xl rounded-bl-2xl rounded-br-sm rounded-tr-2xl"
+                      ? "bg-teal-700 text-white rounded-tl-2xl rounded-bl-2xl rounded-br-sm rounded-tr-2xl"
                       : msg.type === "reservation_done" || msg.type === "inquiry_done"
-                      ? "bg-[#e0fdf4] text-[#065f46] rounded-tr-2xl rounded-br-2xl rounded-bl-sm rounded-tl-2xl shadow-sm border border-[#6ee7b7]"
-                      : "bg-white text-gray-800 rounded-tr-2xl rounded-br-2xl rounded-bl-sm rounded-tl-2xl shadow-sm"
+                      ? "bg-teal-50 text-teal-800 rounded-tr-2xl rounded-br-2xl rounded-bl-sm rounded-tl-2xl border border-teal-200"
+                      : "bg-white text-slate-800 rounded-tr-2xl rounded-br-2xl rounded-bl-sm rounded-tl-2xl shadow-sm border border-slate-200"
                   }`}>
                     {msg.id === "loading" ? (
                       <span className="flex gap-1 items-center px-1">
-                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                        <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                        <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                        <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
                       </span>
                     ) : msg.content}
                   </div>
                   {msg.buttons && msg.buttons.length > 0 && (
                     <div className="flex flex-col gap-1.5 w-full mt-1">
                       {msg.buttons.map((btn) => (
-                        <button key={btn.label} onClick={() => sendMessage(btn.text)} className="text-xs px-3 py-2 rounded-xl border border-[#0f766e] text-[#0f766e] bg-white hover:bg-[#f0fdfa] active:scale-95 transition-all text-left">
+                        <button key={btn.label} onClick={() => sendMessage(btn.text)} className="text-[13px] px-3 py-1.5 rounded-xl border border-teal-200 text-teal-700 bg-white hover:bg-teal-50 active:scale-95 transition-all text-left">
                           {btn.label}
                         </button>
                       ))}
                     </div>
                   )}
-                  <span className="text-[10px] text-gray-400 px-1">{formatTime(msg.createdAt)}</span>
+                  <span className="text-[11px] text-slate-400 px-1">{formatTime(msg.createdAt)}</span>
                 </div>
               </div>
             )}
@@ -331,17 +333,19 @@ function ChatWidget({ onClose, academyName }: { onClose: () => void; academyName
         <div ref={bottomRef} />
       </div>
 
-      <div className="px-3 py-2 grid grid-cols-2 gap-2 flex-shrink-0 bg-white/50">
+      {/* 빠른 버튼 */}
+      <div className="px-4 py-3 grid grid-cols-2 gap-2 flex-shrink-0 bg-white border-t border-slate-100">
         {QUICK_BUTTONS.map((btn) => (
-          <button key={btn.label} onClick={() => sendMessage(btn.text)} disabled={isLoading} className="text-xs px-2 py-2 rounded-full border border-[#0f766e] text-[#0f766e] bg-white hover:bg-[#f0fdfa] active:scale-95 transition-all disabled:opacity-50 truncate">
+          <button key={btn.label} onClick={() => sendMessage(btn.text)} disabled={isLoading} className="h-10 rounded-full border border-slate-200 bg-white text-[13px] font-medium text-slate-600 hover:border-teal-300 hover:text-teal-700 hover:bg-teal-50 active:scale-95 transition-all disabled:opacity-50 truncate px-3">
             {btn.label}
           </button>
         ))}
       </div>
 
-      <div className="px-3 py-3 flex items-center gap-2 bg-white border-t border-gray-100 flex-shrink-0">
-        <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage(input)} placeholder="메시지를 입력하세요..." disabled={isLoading} className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm outline-none text-gray-800 placeholder-gray-400 disabled:opacity-50" />
-        <button onClick={() => sendMessage(input)} disabled={!input.trim() || isLoading} className="w-9 h-9 rounded-full bg-[#0f766e] flex items-center justify-center flex-shrink-0 disabled:opacity-40 active:scale-95 transition-all">
+      {/* 입력창 */}
+      <div className="px-4 py-3 flex items-center gap-2 bg-white border-t border-slate-100 flex-shrink-0">
+        <input type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage(input)} placeholder="메시지를 입력하세요..." disabled={isLoading} className="flex-1 h-11 bg-slate-100 rounded-full px-4 text-[14px] outline-none text-slate-700 placeholder-slate-400 disabled:opacity-50" />
+        <button onClick={() => sendMessage(input)} disabled={!input.trim() || isLoading} className="w-11 h-11 rounded-full bg-teal-700 flex items-center justify-center flex-shrink-0 disabled:opacity-40 active:scale-95 transition-all hover:bg-teal-800">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -377,19 +381,19 @@ export default function StandalonePage() {
       </div>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-[380px] h-[620px] rounded-2xl shadow-2xl overflow-hidden z-50 border border-gray-200" style={{ animation: "slideUp 0.3s ease-out" }}>
+        <div className="fixed bottom-20 right-6 w-[400px] h-[640px] rounded-3xl shadow-2xl overflow-hidden z-50 border border-teal-400" style={{ animation: "slideUp 0.3s ease-out" }}>
           <ChatWidget onClose={() => setIsOpen(false)} academyName={academyName} />
         </div>
       )}
 
-      <button onClick={() => setIsOpen((prev) => !prev)} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#0f766e] shadow-lg flex items-center justify-center text-white hover:bg-[#0d6460] active:scale-95 transition-all z-50">
+      <button onClick={() => setIsOpen((prev) => !prev)} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-teal-700 shadow-xl flex items-center justify-center text-white hover:bg-teal-800 active:scale-95 transition-all z-50">
         {isOpen ? (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         ) : (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         )}
       </button>
